@@ -42,25 +42,25 @@ pub fn parse_module_body(
             ModuleContent::LevelEnd(types::LevelEndModule {
                 label: u32::from_le_bytes([raw_data[0], raw_data[1], raw_data[2], raw_data[3]]),
             })
-        },
+        }
         ModuleType::PauseMt => {
             assert_eq!(len, 4, "Invalid pause module found!");
             ModuleContent::Pause(types::PauseModule {
                 delay: u32::from_le_bytes([raw_data[0], raw_data[1], raw_data[2], raw_data[3]]),
             })
-        },
-        ModuleType::LoopStartMt =>  {
+        }
+        ModuleType::LoopStartMt => {
             assert_eq!(len, 4, "Invalid loop start module found!");
             ModuleContent::LoopStart(types::LoopStartModule {
                 label: u32::from_le_bytes([raw_data[0], raw_data[1], raw_data[2], raw_data[3]]),
             })
-        },
+        }
         ModuleType::LoopEndMt => {
             assert_eq!(len, 4, "Invalid loop end module found!");
             ModuleContent::LoopEnd(types::LoopEndModule {
                 label: u32::from_le_bytes([raw_data[0], raw_data[1], raw_data[2], raw_data[3]]),
             })
-        },
+        }
         ModuleType::FirmwareverMt => {
             assert_eq!(len, 4, "Invalid firmware version module found!");
             ModuleContent::Firmwarever(types::FirmwareverModule {
@@ -132,7 +132,12 @@ pub fn parse_module_body(
                     raw_data[30],
                     raw_data[31],
                 ]),
-                blk_last: u32::from_le_bytes([raw_data[32], raw_data[33], raw_data[34], raw_data[35]]),
+                blk_last: u32::from_le_bytes([
+                    raw_data[32],
+                    raw_data[33],
+                    raw_data[34],
+                    raw_data[35],
+                ]),
                 cond_cnt: u16::from_le_bytes([raw_data[36], raw_data[37]]),
                 crc: u16::from_le_bytes([raw_data[38], raw_data[39]]),
                 adler32: u32::from_le_bytes([
@@ -143,7 +148,7 @@ pub fn parse_module_body(
                 ]),
                 md4: raw_data[44..60].try_into().unwrap(),
             })
-        },
+        }
         ModuleType::CondChkMt => {
             assert_eq!(len, 52, "Invalid condition check module found!");
             ModuleContent::CondChk(types::CondChkModule {
@@ -168,41 +173,54 @@ pub fn parse_module_body(
                 p0: u32::from_le_bytes([raw_data[24], raw_data[25], raw_data[26], raw_data[27]]),
                 obj_nr: u16::from_le_bytes([raw_data[28], raw_data[29]]),
                 rec_dw_first: u16::from_le_bytes([raw_data[30], raw_data[31]]),
-                idx_first: u32::from_le_bytes([raw_data[32], raw_data[33], raw_data[34], raw_data[35]]),
-                bitmask: u32::from_le_bytes([raw_data[36], raw_data[37], raw_data[38], raw_data[39]]),
-                lo_bound: u32::from_le_bytes([raw_data[40], raw_data[41], raw_data[42], raw_data[43]]),
-                hi_bound: u32::from_le_bytes([raw_data[44], raw_data[45], raw_data[46], raw_data[47]]),
+                idx_first: u32::from_le_bytes([
+                    raw_data[32],
+                    raw_data[33],
+                    raw_data[34],
+                    raw_data[35],
+                ]),
+                bitmask: u32::from_le_bytes([
+                    raw_data[36],
+                    raw_data[37],
+                    raw_data[38],
+                    raw_data[39],
+                ]),
+                lo_bound: u32::from_le_bytes([
+                    raw_data[40],
+                    raw_data[41],
+                    raw_data[42],
+                    raw_data[43],
+                ]),
+                hi_bound: u32::from_le_bytes([
+                    raw_data[44],
+                    raw_data[45],
+                    raw_data[46],
+                    raw_data[47],
+                ]),
                 no_obj: raw_data[48],
                 dat_valid: raw_data[49],
                 res_1: raw_data[50],
                 res_2: raw_data[51],
             })
-        },
-        ModuleType::FirmwareMt => {
-            ModuleContent::Firmware(types::FirmwareModule {
-                ctrl: u16::from_le_bytes([raw_data[0], raw_data[1]]),
-                dst_susy: u16::from_le_bytes([raw_data[2], raw_data[3]]),
-                dst_ser: u32::from_le_bytes([raw_data[4], raw_data[5], raw_data[6], raw_data[7]]),
-                dst_dev: raw_data[8],
-                dst_fkt: raw_data[9],
-                src_susy: u16::from_le_bytes([raw_data[10], raw_data[11]]),
-                src_ser: u32::from_le_bytes([
-                    raw_data[12],
-                    raw_data[13],
-                    raw_data[14],
-                    raw_data[15],
-                ]),
-                src_dev: raw_data[16],
-                src_fkt: raw_data[17],
-                cmd: raw_data[18],
-                pcnt: raw_data[19],
-                obj_num: u16::from_le_bytes([raw_data[20], raw_data[21]]),
-                dat_len: u16::from_le_bytes([raw_data[22], raw_data[23]]),
-                p0: u32::from_le_bytes([raw_data[24], raw_data[25], raw_data[26], raw_data[27]]),
-                delay: u32::from_le_bytes([raw_data[28], raw_data[29], raw_data[30], raw_data[31]]),
-                data: raw_data[32..].to_vec(),
-            })
-        },
+        }
+        ModuleType::FirmwareMt => ModuleContent::Firmware(types::FirmwareModule {
+            ctrl: u16::from_le_bytes([raw_data[0], raw_data[1]]),
+            dst_susy: u16::from_le_bytes([raw_data[2], raw_data[3]]),
+            dst_ser: u32::from_le_bytes([raw_data[4], raw_data[5], raw_data[6], raw_data[7]]),
+            dst_dev: raw_data[8],
+            dst_fkt: raw_data[9],
+            src_susy: u16::from_le_bytes([raw_data[10], raw_data[11]]),
+            src_ser: u32::from_le_bytes([raw_data[12], raw_data[13], raw_data[14], raw_data[15]]),
+            src_dev: raw_data[16],
+            src_fkt: raw_data[17],
+            cmd: raw_data[18],
+            pcnt: raw_data[19],
+            obj_num: u16::from_le_bytes([raw_data[20], raw_data[21]]),
+            dat_len: u16::from_le_bytes([raw_data[22], raw_data[23]]),
+            p0: u32::from_le_bytes([raw_data[24], raw_data[25], raw_data[26], raw_data[27]]),
+            delay: u32::from_le_bytes([raw_data[28], raw_data[29], raw_data[30], raw_data[31]]),
+            data: raw_data[32..].to_vec(),
+        }),
         ModuleType::LogoutMt => {
             assert_eq!(len, 28, "Invalid logout module found!");
             ModuleContent::Logout(types::LogoutModule {
@@ -224,7 +242,7 @@ pub fn parse_module_body(
                 pcnt: raw_data[19],
                 obj_num: u16::from_le_bytes([raw_data[20], raw_data[21]]),
                 dat_len: u16::from_le_bytes([raw_data[22], raw_data[23]]),
-                p0: u32::from_le_bytes([raw_data[24], raw_data[25], raw_data[26], raw_data[27]])
+                p0: u32::from_le_bytes([raw_data[24], raw_data[25], raw_data[26], raw_data[27]]),
             })
         }
         ModuleType::UpFmt10Mt => ModuleContent::UpFmt10(types::UpFmt10Module {

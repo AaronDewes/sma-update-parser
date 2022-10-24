@@ -1,7 +1,6 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u32)]
-pub enum ModuleType
-{
+pub enum ModuleType {
     LevelStartMt = 0,
     LevelEndMt = 1,
     PauseMt = 2,
@@ -15,9 +14,8 @@ pub enum ModuleType
     FirmwareMt = 8195,
     LogoutMt = 8196,
     UpFmt10Mt = 12288,
-    UnknownMt = u32::MAX
+    UnknownMt = u32::MAX,
 }
-
 
 impl From<u32> for ModuleType {
     fn from(v: u32) -> Self {
@@ -56,7 +54,6 @@ pub struct Module {
     pub content: ModuleContent,
 }
 
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ModuleHeader {
     pub adler: u32,
@@ -66,8 +63,7 @@ pub struct ModuleHeader {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ModuleContent
-{
+pub enum ModuleContent {
     LevelStart(LevelStartModule),
     LevelEnd(LevelEndModule),
     Pause(PauseModule),
@@ -81,46 +77,40 @@ pub enum ModuleContent
     Firmware(FirmwareModule),
     Logout(LogoutModule),
     UpFmt10(UpFmt10Module),
-    Unknown(UnknownModule)
+    Unknown(UnknownModule),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct LevelStartModule
-{
+pub struct LevelStartModule {
     // This could be a string, but it was empty in the files I tested with, so I'm not fully sure
     pub label: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct LevelEndModule
-{
+pub struct LevelEndModule {
     // This could be a string, but it was empty in the files I tested with, so I'm not fully sure
     pub label: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct PauseModule
-{
+pub struct PauseModule {
     pub delay: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct LoopStartModule
-{
+pub struct LoopStartModule {
     // This could be a string, but it was empty in the files I tested with, so I'm not fully sure
     pub label: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct LoopEndModule
-{
+pub struct LoopEndModule {
     // This could be a string, but it was empty in the files I tested with, so I'm not fully sure
     pub label: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct FirmwareverModule
-{
+pub struct FirmwareverModule {
     pub major_version: u8,
     pub minor_version: u8,
     pub build_number: u8,
@@ -128,14 +118,12 @@ pub struct FirmwareverModule
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct TextModule
-{
-    pub data: String
+pub struct TextModule {
+    pub data: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct LoginModule
-{
+pub struct LoginModule {
     pub ctrl: u16,
     pub dst_susy: u16,
     pub dst_ser: u32,
@@ -158,8 +146,7 @@ pub struct LoginModule
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct FwChkModule
-{
+pub struct FwChkModule {
     pub ctrl: u16,
     pub dst_susy: u16,
     pub dst_ser: u32,
@@ -183,8 +170,7 @@ pub struct FwChkModule
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct CondChkModule
-{
+pub struct CondChkModule {
     pub ctrl: u16,
     pub dst_susy: u16,
     pub dst_ser: u32,
@@ -215,8 +201,7 @@ pub struct CondChkModule
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct FirmwareModule
-{
+pub struct FirmwareModule {
     pub ctrl: u16,
     pub dst_susy: u16,
     pub dst_ser: u32,
@@ -232,12 +217,11 @@ pub struct FirmwareModule
     pub dat_len: u16,
     pub p0: u32,
     pub delay: u32,
-    pub data: Vec<u8>
+    pub data: Vec<u8>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct LogoutModule
-{
+pub struct LogoutModule {
     pub ctrl: u16,
     pub dst_susy: u16,
     pub dst_ser: u32,
@@ -255,20 +239,17 @@ pub struct LogoutModule
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct UpFmt10Module
-{
-    pub data: Vec<u8>
+pub struct UpFmt10Module {
+    pub data: Vec<u8>,
 }
-
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Up2File {
     pub header: Up2Header,
-    pub modules: Vec<Module>
+    pub modules: Vec<Module>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct UnknownModule
-{
-    pub data: Vec<u8>
+pub struct UnknownModule {
+    pub data: Vec<u8>,
 }

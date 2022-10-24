@@ -56,9 +56,10 @@ pub fn parse_module_body(
             })
         }
         ModuleType::LoopEndMt => {
-            assert_eq!(len, 4, "Invalid loop end module found!");
+            assert_eq!(len, 8, "Invalid loop end module found!");
             ModuleContent::LoopEnd(types::LoopEndModule {
                 label: u32::from_le_bytes([raw_data[0], raw_data[1], raw_data[2], raw_data[3]]),
+                loops: u32::from_le_bytes([raw_data[4], raw_data[5], raw_data[6], raw_data[7]]),
             })
         }
         ModuleType::FirmwareverMt => {

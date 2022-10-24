@@ -82,13 +82,11 @@ pub enum ModuleContent {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LevelStartModule {
-    // This could be a string, but it was empty in the files I tested with, so I'm not fully sure
     pub label: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LevelEndModule {
-    // This could be a string, but it was empty in the files I tested with, so I'm not fully sure
     pub label: u32,
 }
 
@@ -99,14 +97,13 @@ pub struct PauseModule {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LoopStartModule {
-    // This could be a string, but it was empty in the files I tested with, so I'm not fully sure
     pub label: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LoopEndModule {
-    // This could be a string, but it was empty in the files I tested with, so I'm not fully sure
     pub label: u32,
+    pub loops: u32,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

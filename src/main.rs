@@ -21,8 +21,6 @@ enum Commands {
         path: String,
         /// The path to dump the raw firmware to (optional)
        dump: Option<String>,
-       /// The path to dump the firmware to, split into blocks (optional)
-    dump_blocks: Option<String>,
     },
 }
 
@@ -31,7 +29,7 @@ fn main() {
     let args = Cli::parse();
 
     match args.command {
-        Commands::Parse { path, dump, dump_blocks } => {
+        Commands::Parse { path, dump } => {
             // Open the file
             let mut file = File::open(path).expect("Unable to open file");
 
@@ -84,29 +82,21 @@ fn main() {
                         println!("CondChk: {:#?}", cond_chk);
                     },
                     ModuleContent::Firmware(firmware) => {
-                        // If dump is set, dump the firmware to the specified path
-                        if let Some(ref dump_path) = dump {
-                            let mut file = File::create(dump_path).expect("Unable to create file");
-                            file.write_all(&firmware.data).expect("Unable to write file");
-                        }
-                        // the firmware for some devices consists of blocks that contain 4 bytes block count, then 128 bytes of data
-                        // Remove the p0 bytes, and count the number of blocks
-                        // Also print the first 4 bytes of every block
+                        // the firmware for some devices consists of blocks that contain a 4 bytes uint that seems to be the block count, then 128 bytes of data
                         let mut blocks = Vec::new();
                         for (i, byte) in firmware.data.chunks(132).enumerate() {
                             let p0 = u32::from_le_bytes([byte[0], byte[1], byte[2], byte[3]]);
-                            assert!(i as u32 == p0, "Block count does not match p0 present in block");
+                            assert_eq!(i as u32, p0, "Block count does not match p0 present in block");
                             // Remove the p0 bytes
                             let block = byte[4..].to_vec();
                             blocks.push(block);
                         }
                         println!("Firmware: {} blocks", blocks.len());
                         // If dump_blocks is set, join the blocks and dump them to the specified path
-                        if let Some(ref dump_blocks_path) = dump_blocks {
-                            let mut file = File::create(dump_blocks_path).expect("Unable to create file");
+                        if let Some(ref dump_path) = dump {
+                            let mut file = File::create(dump_path).expect("Unable to create file");
                             file.write_all(&blocks.concat()).expect("Unable to write file");
                         }
-                        //println!("Firmware: {:#?}", firmware);
                     },
                     ModuleContent::Logout(logout) => {
                         println!("Logout: {:#?}", logout);

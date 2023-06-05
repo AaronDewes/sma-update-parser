@@ -1,4 +1,4 @@
-use sma_update_parser::modules::parse::parse_up2;
+use sma_update_parser::modules::parse::{Up2Parser};
 use sma_update_parser::modules::types::ModuleContent;
 
 // A CLI util to parse a SMA update file
@@ -30,16 +30,13 @@ fn main() {
     match args.command {
         Commands::Parse { path, dump } => {
             // Open the file
-            let mut file = File::open(path).expect("Unable to open file");
-
-            // Read the file into a buffer
-            let mut buffer = Vec::new();
-            file.read_to_end(&mut buffer).expect("Unable to read file");
+            let file = File::open(path).expect("Unable to open file");
+            let reader = std::io::BufReader::new(file);
 
             // Parse the header
-            let file = parse_up2(&buffer);
+            let parser = Up2Parser::new(Box::new(reader)).unwrap();
 
-            let header = file.header;
+            let header = parser.header;
 
             // Print the header
             println!("Header ID: 0x{:x}", header.header_id);
@@ -48,7 +45,12 @@ fn main() {
             println!("Build Number: {}", header.build_number);
             println!("Revision: {}", header.rev);
 
-            for module in file.modules {
+            for module in parser {
+                if let Err(e) = module {
+                    eprintln!("Error parsing module: {}", e);
+                    continue;
+                }
+                let module = module.unwrap();
                 match module.content {
                     ModuleContent::Firmwarever(firmwarever) => {
                         println!("Firmware Version: {:#?}", firmwarever);
